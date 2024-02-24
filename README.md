@@ -40,3 +40,46 @@ Go to **VSCode**, navigate to **PlatformIO** tab, **open folder** and choose clo
 1. To upload code - **PlatformIO** -> **General** -> **Upload**.
 
 2. To upload fs image - **PlatformIO** -> **Platform** -> **Upload Filesystem image**.
+
+> [!CAUTION]
+> REMOVE VIN AND GND BEFORE UPLOAD!
+
+
+## 🌡️ [BME680](https://www.bosch-sensortec.com/products/environmental-sensors/gas-sensors/bme680/)
+
+BME680 sensor measuring relative:
+
+* Ambient temperature. `-40 to 85 ± 1.0ºC`
+* Humidity. `0 to 100 ± 3%`
+* Barometric pressure. `300 to 1100 ± 1 hPa`
+* Gas: Volatile Organic Compounds (VOC) like ethanol and carbon monoxide.
+
+### Sea level pressure ([adafruit reference](https://adafruit.github.io/Adafruit_BME680/html/class_adafruit___b_m_e680.html#a3caae92aa981508f0084b11b1fed4883))
+
+```bash
+#define SEALEVELPRESSURE_HPA (1013)
+```
+
+This variable saves the pressure at the sea level in hectopascal (is equivalent to milibar). This variable is used to estimate the altitude for a given pressure by comparing it with the sea level pressure.
+
+You can find sea level pressure of your current location at [Ventusky](https://www.ventusky.com/) or similar services.
+
+### Oversampling ([adafruit reference](https://adafruit.github.io/Adafruit_BME680/html/class_adafruit___b_m_e680.html#a640ee0a0cb7ca57af30e8408260cc6e6))
+
+To increase the effective resolution of measurements and reduce noise, the BME680 supports oversampling (taking multiple samples and averaging them together).
+
+* `setTemperatureOversampling()`
+* `setHumidityOversampling()`
+* `setPressureOversampling()`
+
+These methods accepts oversampling level up to 16 X.
+
+### IIR filter ([adafruit reference](https://adafruit.github.io/Adafruit_BME680/html/class_adafruit___b_m_e680.html#a42f25a4f258aad9abad4abb6bd95ec77))
+
+The BME680 sensor integrates an internal IIR filter to reduce short-term changes in sensor output values caused by external disturbances.
+
+* `setIIRFilterSize()`
+
+### Gas sensor ([adafruit reference](https://adafruit.github.io/Adafruit_BME680/html/class_adafruit___b_m_e680.html#a2e6a61b5441c51bf5e44c3af3ee3fec8))
+
+The gas sensor integrates a heater. Set the heater profile using the `setGasHeater(TEMPERATURE, DURATION)` method. 

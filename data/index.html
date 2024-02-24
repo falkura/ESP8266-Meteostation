@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>MeteX</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <h1>MeteX v1.0</h1>
+    </div>
+    <div class="content">
+        <div class="card-grid">
+            <div class="card">
+                <p class="card-title"><i class="fas fa-thermometer-threequarters" style="color:#059e8a;"></i>Temperature</p>
+                <p class="reading"><span id="temperature"></span> &deg;C</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Humidity</p>
+                <p class="reading"><span id="humidity"></span> &percnt;</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Gas</p>
+                <p class="reading"><span id="gas"></span> KOhms</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Pressure</p>
+                <p class="reading"><span id="pressure"></span> hPa</p>
+            </div>
+            <div class="card">
+                <p class="card-title">CO2</p>
+                <p class="reading"><span id="co2"></span> ppm</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Resistance</p>
+                <p class="reading"><span id="resistance"></span> Rs/Ro</p>
+            </div>
+            <div class="card">
+                <p class="card-title">Altitude</p>
+                <p class="reading"><span id="altitude"></span> m</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

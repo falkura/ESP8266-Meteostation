@@ -97,3 +97,30 @@ The BME680 sensor integrates an internal IIR filter to reduce short-term changes
 ### Gas sensor ([adafruit reference](https://adafruit.github.io/Adafruit_BME680/html/class_adafruit___b_m_e680.html#a2e6a61b5441c51bf5e44c3af3ee3fec8))
 
 The gas sensor integrates a heater. Set the heater profile using the `setGasHeater(TEMPERATURE, DURATION)` method. 
+
+
+
+## MQ135
+    * info
+    * characteristics
+    * refs
+
+## Sensors Calibration
+    * bme680
+    * mq135
+
+## OLED
+    * about lib
+    * some aesthetics
+
+## Wi-Fi
+    * ssid
+    * password
+
+## Troubleshooting
+    * reset+flash
+    * additional driver
+    * nodemcu flasher
+
+## License
+    * mit

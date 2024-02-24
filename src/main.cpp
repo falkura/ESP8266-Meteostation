@@ -7,44 +7,56 @@
 *********/
 
 #include <Arduino.h>
+
+// Web Server libs
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include "LittleFS.h"
 #include <Arduino_JSON.h>
+
+// BME680 libs
 #include <Adafruit_BME680.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
 #include <SPI.h>
+
+// OLED libs
 #include <GyverOLED.h>
+
+// MQ135 libs
 #include <TroykaMQ.h>
 
-const char *ssid = "TP-Link_0BFD";
-const char *password = "64583129";
+const char *ssid = "TP-Link_0BFD"; // Insert you home WI-FI ssid here
+const char *password = "64583129"; // Insert you home WI-FI password here
 
-AsyncWebServer server(80);
-AsyncWebSocket ws("/ws");
+AsyncWebServer server(80); // Creating Server with port 80
+AsyncWebSocket ws("/ws");  // Creating Web socket with default address
 JSONVar readings;
 
 unsigned long lastTime = 0;
-unsigned long timerDelay = 2000; // 1200
+unsigned long timerDelay = 2000; // Delay between data updating
 
 Adafruit_BME680 bme;
-#define SEALEVELPRESSURE_HPA (999)
+#define SEALEVELPRESSURE_HPA (999) // Sea level preasure for your current location
 
+// I used the oled display model SSD1306 with resolution 128x64.
+// Also available SSH1106 128x64 and SSD1306 128x32 (font resizing is required).
 GyverOLED<SSD1306_128x64, OLED_NO_BUFFER> oled;
 int current_screen = 0;
-int screens_count = 4;
-int screens_count_full = 7;
+int screens_count = 4;      // count of info screens we want to show on the display
+int screens_count_full = 7; // total count of info screens we want to show on the web server page
 
-int PIN_CLICK = D7; // * DO NOT USE D3 and D4 FOR BUTTONS !!!
-int PIN_LED = D8;
+// * DO NOT USE D3 and D4 FOR BUTTONS !!!
+int PIN_CLICK = D7; // Button pin
+int PIN_LED = D8;   // Led pin. You can also use one of onboard LEDs, that have pins D0 or D4.
 
 uint8_t btn_prev;
 
-#define PIN_MQ135 A0
+#define PIN_MQ135 A0 // MQ135 analogue pin.
 MQ135 mq135(PIN_MQ135);
 
+// Sensors data structure
 struct SensorsData
 {
   float temperature;
@@ -58,9 +70,9 @@ struct SensorsData
 
 String dName, dData;
 
+// Just for aesthetic purpose :)
 void showLoadState(String info)
 {
-  // oled.clear();
   oled.home();
   oled.setScale(2);
   oled.print("MeteX v1.0");
@@ -71,18 +83,16 @@ void showLoadState(String info)
   oled.print("Loading...");
 }
 
+// Initialize oled display
 void initOled()
 {
   oled.init();
   oled.clear();
-  showLoadState("Initialization");
-  delay(500);
 }
 
+// Initialize BME680 sensor
 void initBME()
 {
-  showLoadState("BME680");
-
   while (!Serial)
     ;
   Serial.println(F("BME680 test"));
@@ -94,44 +104,27 @@ void initBME()
       ;
   }
 
+  // Set up oversampling and filter initialization
   bme.setTemperatureOversampling(BME680_OS_8X);
   bme.setHumidityOversampling(BME680_OS_2X);
   bme.setPressureOversampling(BME680_OS_4X);
-  bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
-  bme.setGasHeater(320, 150);
 
-  delay(500);
+  // Set internal IIR filter to reduce short-term changes in sensor output values
+  bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
+
+  // Set gas heater temperature 320 degrees C for 150ms
+  bme.setGasHeater(320, 150);
 }
 
+// Initialize MQ135 sensor
 void initMQ()
 {
-  showLoadState("MQ135");
   mq135.calibrate();
-  Serial.print("Ro = ");
-  Serial.println(mq135.getRo());
-
-  delay(500);
 }
 
-String getSensorReadings()
-{
-  readings["temperature"] = sData.temperature;
-  readings["humidity"] = sData.humidity;
-  readings["pressure"] = sData.pressure;
-  readings["gas"] = sData.gas;
-  readings["co2"] = sData.co2;
-  readings["altitude"] = sData.altitude;
-  readings["resistance"] = sData.resistance;
-
-  String jsonString = JSON.stringify(readings);
-  return jsonString;
-}
-
-// Initialize LittleFS
+// Initialize LittleFS storage
 void initFS()
 {
-  showLoadState("LittleFS");
-
   if (!LittleFS.begin())
   {
     Serial.println("An error has occurred while mounting LittleFS");
@@ -140,15 +133,11 @@ void initFS()
   {
     Serial.println("LittleFS mounted successfully");
   }
-
-  delay(500);
 }
 
 // Initialize WiFi
 void initWiFi()
 {
-  showLoadState("Wi-Fi");
-
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi ..");
@@ -158,10 +147,9 @@ void initWiFi()
     delay(1000);
   }
   Serial.println(WiFi.localIP());
-
-  delay(500);
 }
 
+// Send sensors data to client
 void notifyClients(String sensorReadings)
 {
   ws.textAll(sensorReadings);
@@ -197,26 +185,56 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
   }
 }
 
+// Initialize Web Socket
 void initWebSocket()
 {
-  showLoadState("Web Socket");
-
   ws.onEvent(onEvent);
   server.addHandler(&ws);
-
-  delay(500);
 }
 
+// Get sensors data and format it to json string
+String getSensorReadings()
+{
+  readings["temperature"] = sData.temperature;
+  readings["humidity"] = sData.humidity;
+  readings["pressure"] = sData.pressure;
+  readings["gas"] = sData.gas;
+  readings["co2"] = sData.co2;
+  readings["altitude"] = sData.altitude;
+  readings["resistance"] = sData.resistance;
+
+  String jsonString = JSON.stringify(readings);
+  return jsonString;
+}
+
+// Main
 void setup()
 {
   Serial.begin(9600);
 
   initOled();
+  showLoadState("Initialization");
+  delay(500);
+
+  showLoadState("BME680");
   initBME();
+  delay(500);
+
+  showLoadState("MQ135");
   initMQ();
+  delay(500);
+
+  showLoadState("Wi-Fi");
   initWiFi();
+  delay(500);
+
+  showLoadState("LittleFS");
   initFS();
+  delay(500);
+
+  showLoadState("Web Socket");
   initWebSocket();
+  delay(500);
 
   // Web Server Root URL
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -237,16 +255,23 @@ void setup()
   oled.clear();
 }
 
+// Show specific data on the display
 void displayData(String displayName, String displayData)
 {
   oled.home();
   oled.setScale(1);
+  // I use extra spaces instead of the oled.clear() to
+  // clear the screen, as it causes the screen to blink
+
+  // There is an option to add oled buffer, but it'll just make impossible to start the server
+  // TODO - try another oled lib
   oled.print(displayName + "         ");
   oled.setCursor(0, 2);
   oled.setScale(2);
   oled.print(displayData + "         ");
 }
 
+// Update data and save to sData structure
 void updateBME680Data()
 {
   if (!bme.performReading())
@@ -262,26 +287,25 @@ void updateBME680Data()
   sData.altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
 }
 
+// Update data and save to sData structure
 void updateMQ135Data()
 {
   sData.resistance = mq135.readRatio(); // Rs/Ro
   sData.co2 = mq135.readCO2();
 }
 
+// Update sensors data and turn on LED during updating
 void updateSensors()
 {
-  // long read_start_time = millis();
   digitalWrite(PIN_LED, HIGH);
 
   updateBME680Data();
   updateMQ135Data();
 
   digitalWrite(PIN_LED, LOW);
-  // Serial.print("Total update time: ");
-  // Serial.println(millis() - read_start_time);
-  // Serial.println();
 }
 
+// Get sensor data to display
 void getSensorData(int _screen, String *dName, String *dData)
 {
   switch (_screen)
@@ -328,6 +352,7 @@ void getSensorData(int _screen, String *dName, String *dData)
   }
 }
 
+// Loop
 void loop()
 {
   int click = digitalRead(PIN_CLICK);

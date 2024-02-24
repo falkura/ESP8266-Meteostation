@@ -2,7 +2,12 @@
 # MeteX
 
 MeteX is home meteostation based on NodeMCU v2.0 with sensors BME680 and MQ135, info display and control button.
+<details><summary>MeteX Circuit Preview</summary>
+<p>
 
+![Metex Preview](https://github.com/falkura/ESP8266-Meteo/assets/52701619/457310f8-2d26-41ab-b816-22f6bd7d36a4)
+</p>
+</details>
 
 
 ## 🔨 Installation

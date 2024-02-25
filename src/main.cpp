@@ -39,6 +39,9 @@ unsigned long timerDelay = 2000; // Delay between data updating
 Adafruit_BME680 bme;
 #define SEALEVELPRESSURE_HPA (1013) // Sea level preasure for your current location
 
+float temperature_offset = 0.0;
+float humidity_offset = 0.0;
+
 // I used the oled display model SSD1306 with resolution 128x64.
 // Also available SSH1106 128x64 and SSD1306 128x32 (font resizing is required).
 GyverOLED<SSD1306_128x64, OLED_NO_BUFFER> oled;
@@ -279,9 +282,9 @@ void updateBME680Data()
     return;
   }
 
-  sData.temperature = bme.temperature;
+  sData.temperature = bme.temperature - temperature_offset;
   sData.pressure = bme.pressure / 100.0;
-  sData.humidity = bme.humidity;
+  sData.humidity = bme.humidity - humidity_offset;
   sData.gas = bme.gas_resistance / 1000.0;
   sData.altitude = bme.readAltitude(SEALEVELPRESSURE_HPA);
 }
@@ -349,6 +352,13 @@ void getSensorData(int _screen, String *dName, String *dData)
     *dData = String(_screen);
     break;
   }
+}
+
+void recalibrate()
+{
+  showLoadState("Recalibration...");
+  initMQ();
+  delay(2000);
 }
 
 // Loop

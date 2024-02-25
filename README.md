@@ -75,6 +75,7 @@ This variable saves the pressure at the sea level in hectopascal (is equivalent 
 
 You can find sea level pressure of your current location at [Ventusky](https://www.ventusky.com/) or similar services.
 
+If you have several airports near your location, you can get more accurate SLP. You can do it according to [this guide](https://www.youtube.com/watch?v=Wq-Kb7D8eQ4).
 
 ### Oversampling ([adafruit reference](https://adafruit.github.io/Adafruit_BME680/html/class_adafruit___b_m_e680.html#a640ee0a0cb7ca57af30e8408260cc6e6))
 

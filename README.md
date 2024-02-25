@@ -100,14 +100,51 @@ The gas sensor integrates a heater. Set the heater profile using the `setGasHeat
 
 
 
-## MQ135
-    * info
-    * characteristics
-    * refs
+## 💨 MQ135
 
-## Sensors Calibration
-    * bme680
-    * mq135
+The MQ135 is an air quality sensor module that designed to detect the content and quantity of harmful and hazardous gases in the air such as NH3, NOx, alcohol vapour, petrol, smoke, CO2, etc.
+
+
+### References
+
+- [**Manual**](https://www.winsen-sensor.com/d/files/PDF/Semiconductor%20Gas%20Sensor/MQ135%20(Ver1.4)%20-%20Manual.pdf)
+- [**Datasheet**](https://www.olimex.com/Products/Components/Sensors/Gas/SNS-MQ135/resources/SNS-MQ135.pdf)
+
+
+
+## ⚖️ Calibration
+
+To get an accurate readings from BME680 and from MQ135 it is important to calibrate sensors. 
+
+> [!NOTE]
+> Temperature, humidity and MQ135 should only be calibrated once, whereas pressure calibration should be done every time the meteostation is moved to a new location (only relevant for mobile meteostations).
+
+
+### CO2
+
+To calibrate MQ135 - put your meteostation outside where there is enough fresh air (ideally at 20°C and 33% humidity according to the datasheet) and leave it powered on for 12-24 hours to burn it in and stabilize.
+
+Then you can restart meteostation via pressing **RST** button on your NodeMCU.
+
+
+### Temperature and Humidity
+
+To calibrate temperature and humidity - leave a good thermohydrometer (thermometer with humidity sensor) near the meteostation and adjust offset values in code:
+
+- `temperature_offset` for temperature difference
+- `humidity_offset` for humidity difference
+
+> [!NOTE]
+> The temperature and humidity sensors are good enough, so calibrating them is not that necessary.
+
+### Pressure
+
+To find out how to calibrate pressure module read [this section](https://github.com/falkura/ESP8266-Meteo/tree/master?tab=readme-ov-file#sea-level-pressure-adafruit-reference).
+
+
+### VOC (BME680 gas sensor)
+
+To calibrate the gas sensor, you need to find an environment with good air quality, leave meteostation there for a few minutes, and then repeat this in an environment with poor air quality.
 
 ## OLED
     * about lib

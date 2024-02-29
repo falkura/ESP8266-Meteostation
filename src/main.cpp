@@ -39,6 +39,7 @@ unsigned long timerDelay = 2000; // Delay between data updating
 Adafruit_BME680 bme;
 #define SEALEVELPRESSURE_HPA (1013) // Sea level preasure for your current location
 
+// BME sensor offsets
 float temperature_offset = 0.0;
 float humidity_offset = 0.0;
 
@@ -263,7 +264,7 @@ void displayData(String displayName, String displayData)
   oled.home();
   oled.setScale(1);
   // I use extra spaces instead of the oled.clear() to
-  // clear the screen, as it causes the screen to blink
+  // clear the screen, because oled.clear causes the screen to blink
 
   // There is an option to add oled buffer, but it'll just make impossible to start the server
   // TODO - try another oled lib
@@ -352,13 +353,6 @@ void getSensorData(int _screen, String *dName, String *dData)
     *dData = String(_screen);
     break;
   }
-}
-
-void recalibrate()
-{
-  showLoadState("Recalibration...");
-  initMQ();
-  delay(2000);
 }
 
 // Loop

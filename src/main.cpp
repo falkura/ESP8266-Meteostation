@@ -1,16 +1,5 @@
-/*********
-  Rui Santos
-  Complete instructions at https://RandomNerdTutorials.com/esp8266-nodemcu-websocket-server-sensor/
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files.
-  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*********/
-
-#include <Arduino.h>
-
 // Web Server libs
 #include <ESP8266WiFi.h>
-#include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include "LittleFS.h"
 #include <Arduino_JSON.h>
@@ -18,7 +7,6 @@
 // BME680 libs
 #include <Adafruit_BME680.h> // to interface with the BME680 sensor
 #include <Adafruit_Sensor.h> // to interface with the BME680 sensor
-#include <Wire.h>            // to use I2C
 
 // OLED libs
 #include <GyverOLED.h>

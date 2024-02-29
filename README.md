@@ -145,11 +145,21 @@ To find out how to calibrate pressure module read [this section](https://github.
 
 ### VOC (BME680 gas sensor)
 
-To calibrate the gas sensor, you need to find an environment with good air quality, leave meteostation there for a few minutes, and then repeat this in an environment with poor air quality.
+To calibrate the gas sensor, you need to find an environment with **good air quality**, leave meteostation there for a few minutes, and then repeat this in an environment with **poor air quality**.
 
-## OLED
-    * about lib
-    * some aesthetics
+
+
+## 🖥️ OLED display
+
+**SSD1306-128x64** - Is a simple screen I used to display sensor information directly on the meteostation.
+
+More info about the screen you can find here - [**Datasheet**](https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf)
+
+
+### Control 
+To change the information displayed, you need to press the button and hold it down until the next screen appears. Then, you need to release the button, and repeat this process for another screen.
+
+
 
 ## Wi-Fi
     * ssid

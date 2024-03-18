@@ -160,15 +160,22 @@ More info about the screen you can find here - [**Datasheet**](https://cdn-shop.
 To change the information displayed, you need to press the button and hold it down until the next screen appears. Then, you need to release the button, and repeat this process for another screen.
 
 
+## 🌐 Wi-Fi
 
-## Wi-Fi
-    * ssid
-    * password
+To connect meteostation to your Wi-Fi, you just need to insert **ssid** and **password** of your local Wi-Fi network.
 
-## Troubleshooting
-    * reset+flash
-    * additional driver
-    * nodemcu flasher
+```bash
+const char *ssid = "SSID"; // Insert you home WI-FI ssid here
+const char *password = "PASSWORD"; // Insert you home WI-FI password here
+```
 
-## License
-    * mit
+After connecting the meteostation to your computer, you need to open the Serial Monitor and wait for it connection to Wi-Fi. Then you can see **local IP** of ESP8266.
+
+## 😵 Troubleshooting
+
+[**Issue Tracker**](https://github.com/falkura/ESP8266-Meteostation/issues)
+
+
+## 🗎 License
+
+The MeteX extension is licensed under the terms of the MIT license and is available for free.

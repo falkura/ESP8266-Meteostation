@@ -1,17 +1,17 @@
 // Web Server libs
-#include <ESP8266WiFi.h>
-#include <ESPAsyncWebServer.h>
-#include "LittleFS.h"
-#include <Arduino_JSON.h>
+#include <ESP8266WiFi.h> // Ability to work with wi-fi module on esp8266
+#include <ESPAsyncWebServer.h> // For web server and web socket
+#include "LittleFS.h" // File system that works with our client
+#include <Arduino_JSON.h> // JSON capabilities
 
 // BME680 libs
 #include <Adafruit_BME680.h> // to interface with the BME680 sensor
 #include <Adafruit_Sensor.h> // to interface with the BME680 sensor
 
-// OLED libs
+// OLED lib
 #include <GyverOLED.h>
 
-// MQ135 libs
+// MQ135 lib
 #include <TroykaMQ.h>
 
 const char *ssid = "TP-Link_0BFD"; // Insert you home WI-FI ssid here
@@ -129,14 +129,17 @@ void initFS()
 // Initialize WiFi
 void initWiFi()
 {
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.mode(WIFI_STA);        // Use mode STA that provided connectivity to another Wi-Fi network
+  WiFi.begin(ssid, password); // Connect with presented ssid and password
+
   Serial.print("Connecting to WiFi ..");
+
   while (WiFi.status() != WL_CONNECTED)
   {
     Serial.print('.');
     delay(1000);
   }
+
   Serial.println(WiFi.localIP());
 }
 
@@ -161,6 +164,7 @@ String getSensorReadings()
   return jsonString;
 }
 
+// Handle data update signal
 void handleWebSocketMessage(void *arg, uint8_t *data, size_t len)
 {
   AwsFrameInfo *info = (AwsFrameInfo *)arg;
@@ -172,6 +176,7 @@ void handleWebSocketMessage(void *arg, uint8_t *data, size_t len)
   }
 }
 
+// Handler for web socket events
 void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len)
 {
   switch (type)
@@ -198,7 +203,7 @@ void initWebSocket()
   server.addHandler(&ws);
 }
 
-// Main
+// Project entry point
 void setup()
 {
   Serial.begin(9600);
@@ -343,7 +348,7 @@ void getSensorData(int _screen, String *dName, String *dData)
   }
 }
 
-// Loop
+// Loop function for updating our data
 void loop()
 {
   int click = digitalRead(PIN_CLICK);
